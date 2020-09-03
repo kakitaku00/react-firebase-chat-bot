@@ -1,20 +1,25 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { TextInput } from "./index";
-const FormDialog = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [description, setDescription] = useState("");
 
-  const inputName = useCallback(
+const FormDialog = (props) => {
+  const [description, setDescription] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+
+  const url =
+    "https://hooks.slack.com/services/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";
+
+  // Functions triggered by inputting text value
+  const inputDescription = useCallback(
     (event) => {
-      setName(event.target.value);
+      setDescription(event.target.value);
     },
-    [setName]
+    [setDescription]
   );
 
   const inputEmail = useCallback(
@@ -24,49 +29,73 @@ const FormDialog = () => {
     [setEmail]
   );
 
-  const inputDescription = useCallback(
+  const inputName = useCallback(
     (event) => {
-      setDescription(event.target.value);
+      setName(event.target.value);
     },
-    [setDescription]
+    [setName]
   );
 
+  const validateEmailFormat = (email) => {
+    const regex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    return regex.test(email);
+  };
+
+  const validateRequiredInput = (...args) => {
+    let isBlank = false;
+    for (let i = 0; i < args.length; i = (i + 1) | 0) {
+      if (args[i] === "") {
+        isBlank = true;
+      }
+    }
+    return isBlank;
+  };
+
+  // Slackに問い合わせがあったことを通知する
   const submitForm = () => {
-    const payload = {
-      text: `お問い合わせがありました
-        お名前:${name}
-        Email:${email}
-        お問い合わせ内容:${description}`,
-    };
+    const isBlank = validateRequiredInput(name, email, description);
+    const isValidEmail = validateEmailFormat(email);
 
-    const url =
-      "https://hooks.slack.com/services/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";
+    if (isBlank) {
+      alert("必須入力欄が空白です。");
+      return false;
+    } else if (!isValidEmail) {
+      alert("メールアドレスの書式が異なります。");
+      return false;
+    } else {
+      const payload = {
+        text:
+          "お問い合わせがありました\n" +
+          "お名前: " +
+          name +
+          "\n" +
+          "メールアドレス: " +
+          email +
+          "\n" +
+          "【問い合わせ内容】\n" +
+          description,
+      };
 
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }).then(() => {
-      alert("お問い合わせが完了しました");
-      setDescription("");
-      setEmail("");
-      setName("");
-      return this.props.handleClose();
-    });
+      // fetchメソッドでフォームの内容をSlackのIncoming Webhook URL に送信する
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }).then(() => {
+        alert("送信が完了しました。追ってご連絡いたします🙌");
+        setDescription("");
+        setEmail("");
+        setName("");
+        return props.handleClose();
+      });
+    }
   };
 
   return (
-    <Dialog
-      open={this.props.open}
-      onClose={this.props.handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">
-        {"お問い合わせフォーム"}
-      </DialogTitle>
+    <Dialog open={props.open} onClose={props.handleClose}>
+      <DialogTitle>お問い合わせフォーム</DialogTitle>
       <DialogContent>
         <TextInput
-          label={"お名前（必須）"}
+          label={"名前(必須)"}
           multiline={false}
           rows={1}
           value={name}
@@ -74,7 +103,7 @@ const FormDialog = () => {
           onChange={inputName}
         />
         <TextInput
-          label={"メールアドレス（必須）"}
+          label={"メールアドレス(必須)"}
           multiline={false}
           rows={1}
           value={email}
@@ -91,10 +120,10 @@ const FormDialog = () => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={this.props.handleClose} color="primary">
+        <Button onClick={props.handleClose} color="primary">
           キャンセル
         </Button>
-        <Button onClick={submitForm} color="primary" autoFocus>
+        <Button onClick={submitForm} color="primary">
           送信する
         </Button>
       </DialogActions>

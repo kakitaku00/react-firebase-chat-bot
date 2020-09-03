@@ -9,7 +9,7 @@ const defaultDataset = {
       { content: "学習コミュニティについて知りたい", nextId: "community" },
       { content: "お付き合いしたい", nextId: "dating" },
     ],
-    question: "こんにちは！🐯トラハックへのご用件はなんでしょうか？",
+    question: "こんにちは！ご用件はなんでしょうか？",
   },
   job_offer: {
     answers: [
@@ -52,48 +52,47 @@ const defaultDataset = {
   consultant: {
     answers: [
       {
-        content: "YouTubeで動画を見る",
-        nextId: "https://www.youtube.com/channel/UC-bOAxx-YOsviSmqh8COR0w",
+        content: "動画を見る",
+        nextId: "https://www.youtube.com/",
       },
-      { content: "学習コミュニティについて知りたい", nextId: "community" },
+      { content: "コミュニティについて知りたい", nextId: "community" },
       { content: "最初の質問に戻る", nextId: "init" },
     ],
     question:
-      "トラハックは普段からYouTubeでキャリアについて発信しています。また、僕が運営するエンジニア向け学習コミュニティ内でも相談に乗っていますよ。",
+      "キャリアについて発信しています。エンジニア向けコミュニティ内でも相談に乗っていますよ。",
   },
   community: {
     answers: [
       { content: "どんな活動をしているの？", nextId: "community_activity" },
       {
         content: "コミュニティに参加したい",
-        nextId: "https://torahack.web.app/community/",
+        nextId: "/",
       },
       { content: "最初の質問に戻る", nextId: "init" },
     ],
     question:
-      "2020年3月から学習コミュニティを始めました！🎉Webエンジニアへの転職を目指す人向けに、プログラミングを教えたりキャリアの相談に乗っています。",
+      "コミュニティを始めました！プログラミングを教えたりキャリアの相談に乗っています。",
   },
   community_activity: {
     answers: [
       {
         content: "さらに詳細を知りたい",
-        nextId: "https://youtu.be/tIzE7hUDbBM",
+        nextId: "/",
       },
       {
         content: "コミュニティに参加したい",
-        nextId: "https://torahack.web.app/community/",
+        nextId: "/",
       },
       { content: "最初の質問に戻る", nextId: "init" },
     ],
-    question:
-      "フロントエンド向けの教材の提供、キャリアや勉強法に関するメルマガの配信、週1のオンライン作業会などを開催しています！\n詳細はYouTube動画で紹介しています。",
+    question: "フロントエンド向けの教材の提供、紹介をしています。",
   },
   dating: {
     answers: [
-      { content: "DMする", nextId: "https://twitter.com/torahack_" },
+      { content: "DMする", nextId: "/" },
       { content: "最初の質問に戻る", nextId: "init" },
     ],
-    question: "まずは一緒にランチでもいかがですか？DMしてください😘",
+    question: "まずは一緒にランチでもいかがですか？",
   },
 };
 
